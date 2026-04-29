@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Султан 90-х | Карточная игра</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="gothic-bg"></div>
+
+    <div id="authScreen" class="menu-container">
+        <div class="gothic-border">
+            <h1 class="gothic-title">🂡СУЛТАН🂡</h1>
+            <p class="gothic-subtitle">Карточная игра из 90-х</p>
+            <div class="menu-card">
+                <input type="text" id="regUsername" placeholder="Никнейм" class="gothic-input">
+                <input type="password" id="regPassword" placeholder="Пароль" class="gothic-input">
+                <button id="registerBtn" class="gothic-btn gothic-btn-red">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+                <button id="loginBtn" class="gothic-btn gothic-btn-black">ВОЙТИ</button>
+            </div>
+            <div id="authMessage" class="rules-panel" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div id="lobbyScreen" class="lobby-container" style="display: none;">
+        <div class="gothic-border">
+            <h2>ДОБРО ПОЖАЛОВАТЬ, <span id="lobbyUsername"></span>!</h2>
+            <div class="online-panel">
+                <h3>ИГРОКИ ОНЛАЙН</h3>
+                <div id="onlineList" class="online-list"></div>
+                <p style="font-size: 12px; color: #888; margin-top: 10px;">Для игры втроём выберите ДВУХ игроков</p>
+            </div>
+            <div class="game-type-panel">
+                <button id="invite2Btn" class="gothic-btn gothic-btn-red">ПРИГЛАСИТЬ В ДВОЕМ</button>
+                <button id="invite3Btn" class="gothic-btn gothic-btn-black">ПРИГЛАСИТЬ В ТРОЕМ</button>
+            </div>
+            <div class="rules-panel">
+                <h3>ПРАВИЛА СУЛТАНА</h3>
+                <ul style="text-align:left; padding-left:20px;">
+                    <li>♠ ПИКИ бьются только ПИКАМИ (старшей)</li>
+                    <li>♦ БУБИ - КОЗЫРЬ! Бьют любую карту (кроме пик)</li>
+                    <li>♥ ♣ Остальные масти бьются старшей картой</li>
+                    <li>🎯 Цель: избавиться от всех карт</li>
+                    <li>📦 Раздача: по 12 карт</li>
+                    <li>👑 Дама заканчивает кон</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameArea" class="game-area" style="display: none;">
+        <div class="game-table">
+            <div class="chair chair-top" id="chairTop">
+                <div class="avatar" id="avatarTop"></div>
+                <div class="player-name" id="nameTop"></div>
+                <div class="cards-count" id="countTop"></div>
+                <div class="hand-cards hand-top" id="handTop"></div>
+            </div>
+
+            <div class="chair chair-top2" id="chairTop2" style="top: -20px; left: 65%; transform: translateX(-50%);">
+                <div class="avatar" id="avatarTop2"></div>
+                <div class="player-name" id="nameTop2"></div>
+                <div class="cards-count" id="countTop2"></div>
+                <div class="hand-cards hand-top" id="handTop2"></div>
+            </div>
+
+            <div class="table-center">
+                <div class="trump-area">
+                    <div class="trump-label">КОЗЫРЬ</div>
+                    <div class="trump-card" id="trumpCard">♦</div>
+                    <div class="trump-suit">БУБИ</div>
+                </div>
+                <div class="battle-field" id="battleField"></div>
+                <div class="turn-indicator" id="turnIndicator">ОЖИДАНИЕ</div>
+            </div>
+
+            <div class="chair chair-right" id="chairRight">
+                <div class="avatar" id="avatarRight"></div>
+                <div class="player-name" id="nameRight"></div>
+                <div class="cards-count" id="countRight"></div>
+                <div class="hand-cards hand-right" id="handRight"></div>
+            </div>
+        </div>
+
+        <div class="player-bottom">
+            <div class="avatar-large" id="playerAvatar">👤</div>
+            <div class="player-info">
+                <div class="player-name-large" id="playerNameDisplay"></div>
+                <div class="cards-count-large" id="playerCardsCount"></div>
+                <span id="currentPlayerName" style="display: none;"></span>
+            </div>
+            <div class="player-hand-container">
+                <div class="hand-cards player-hand" id="playerHand"></div>
+            </div>
+            <div class="action-buttons">
+                <button id="passBtn" class="gothic-btn gothic-btn-black action-btn">ВЗЯТЬ КАРТЫ</button>
+                <button id="finishTurnBtn" class="gothic-btn gothic-btn-red action-btn">ЗАКОНЧИТЬ ХОД</button>
+                <button id="chatBtn" class="gothic-btn gothic-btn-black action-btn" style="position: relative;">
+                    ЧАТ <span id="chatBadge" class="chat-badge" style="display: none;">!</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="winnerModal" class="modal" style="display: none;">
+        <div class="modal-content gothic-border">
+            <h2 id="winnerText">ПОБЕДИТЕЛЬ</h2>
+            <button id="playAgainBtn" class="gothic-btn gothic-btn-red">В ЛОББИ</button>
+        </div>
+    </div>
+
+    <div id="podiumModal" class="modal podium-modal" style="display: none;">
+        <div class="podium-container">
+            <h2 class="podium-title">🏆 ПЬЕДЕСТАЛ ПОЧЁТА 🏆</h2>
+            <div class="podium">
+                <div class="podium-item place-2">
+                    <div class="podium-avatar">👤</div>
+                    <div class="podium-name" id="secondPlaceName">Игрок 2</div>
+                    <div class="podium-medal silver">🥈</div>
+                    <div class="podium-place">2 МЕСТО</div>
+                </div>
+                <div class="podium-item place-1">
+                    <div class="podium-crown">👑</div>
+                    <div class="podium-avatar gold">👤</div>
+                    <div class="podium-name" id="firstPlaceName">Игрок 1</div>
+                    <div class="podium-medal gold">🥇</div>
+                    <div class="podium-place">ЧЕМПИОН!</div>
+                </div>
+                <div class="podium-item place-3">
+                    <div class="podium-avatar">👤</div>
+                    <div class="podium-name" id="thirdPlaceName">Игрок 3</div>
+                    <div class="podium-medal bronze">🥉</div>
+                    <div class="podium-place">3 МЕСТО</div>
+                </div>
+            </div>
+            <button id="closePodiumBtn" class="gothic-btn gothic-btn-red">В ЛОББИ</button>
+        </div>
+    </div>
+
+    <div id="waitingMessage" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.95); color: #ffaa00; padding: 20px 40px; border-radius: 15px; border: 2px solid #ff0000; z-index: 1000; font-size: 24px; text-align: center; box-shadow: 0 0 50px rgba(255,0,0,0.5);">
+        ⏳ ОЖИДАНИЕ ТРЕТЬЕГО ИГРОКА... ⏳
+        <div style="font-size: 14px; margin-top: 10px; color: #ff6600;">Игра начнётся автоматически</div>
+    </div>
+
+    <div id="notificationArea" class="notification-area"></div>
+
+    <!-- ОКНО ЧАТА -->
+    <div id="chatWindow" class="chat-window gothic-border" style="display: none;">
+        <div class="chat-header">
+            <span>КРИПТА СООБЩЕНИЙ</span>
+            <button id="closeChat">×</button>
+        </div>
+        <div id="chatMessages" class="chat-messages"></div>
+        
+        <div class="chat-input-area">
+            <button id="emojiBtn" class="emoji-trigger">😊</button>
+            <input type="text" id="chatInput" class="gothic-input" placeholder="Начертай...">
+            <button id="sendChatBtn" class="gothic-btn gothic-btn-red">></button>
+        </div>
+
+        <div id="emojiPicker" class="emoji-picker gothic-border" style="display: none;">
+            <div class="emoji-tabs">
+                <button onclick="filterEmoji('smiles')">😊</button>
+                <button onclick="filterEmoji('gestures')">👍</button>
+                <button onclick="filterEmoji('hearts')">❤️</button>
+            </div>
+            <div id="emojiList" class="emoji-list"></div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+</body>
+</html>
